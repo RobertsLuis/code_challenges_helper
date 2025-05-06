@@ -11,9 +11,7 @@ authors = [
 description = "Ferramenta para criar estrutura de pastas para estudos de desafios de código"
 readme = "README.md"
 requires-python = ">=3.7"
-urls = {
-    "GitHub Repository" = "https://github.com/RobertsLuis/code_challenges_helper",
-}
+
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
@@ -33,8 +31,12 @@ keywords = [
     "code",
     "challenge-helper",
 ]
+
+[project.urls]
+"GitHub Repository" = "https://github.com/RobertsLuis/code_challenges_helper"
+
 [project.scripts]
-code-challenge-helper = "code-challenge-helper.cli:main"
+challenge-helper = "code_challenge_helper.cli:main"
 
 [tool.setuptools]
 include-package-data = true
