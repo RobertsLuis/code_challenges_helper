@@ -4,7 +4,7 @@ Módulo para geração de estrutura de pastas e arquivos
 
 import os
 from datetime import datetime
-import pkg_resources
+from importlib import resources
 
 
 def get_template_content(template_type, language, extension):
@@ -21,16 +21,17 @@ def get_template_content(template_type, language, extension):
     """
     template_path = f"templates/{language}/{template_type}.{extension}"
     try:
-        content = pkg_resources.resource_string(
-            "code_challenge_helper", template_path
-        ).decode("utf-8")
+        with resources.files("code_challenge_helper").joinpath(template_path).open(
+            "r", encoding="utf-8"
+        ) as file:
+            content = file.read()
 
-        # Normaliza as quebras de linha para o padrão do sistema
         content = content.replace("\r\n", "\n").replace("\r", "\n")
 
         return content
     except Exception as e:
         raise ValueError(f"Erro ao carregar template {template_path}: {e}")
+
 
 def get_escalidraw_template():
     """
@@ -41,9 +42,11 @@ def get_escalidraw_template():
     """
     template_path = "templates/Excalidraw.md"
     try:
-        content = pkg_resources.resource_string(
-            "code_challenge_helper", template_path
-        ).decode("utf-8")
+        # Use importlib.resources instead of pkg_resources
+        with resources.files("code_challenge_helper").joinpath(template_path).open(
+            "r", encoding="utf-8"
+        ) as file:
+            content = file.read()
 
         # Normaliza as quebras de linha para o padrão do sistema
         content = content.replace("\r\n", "\n").replace("\r", "\n")
@@ -52,6 +55,7 @@ def get_escalidraw_template():
     except Exception as e:
         raise ValueError(f"Erro ao carregar template {template_path}: {e}")
 
+
 def create_challenge_structure(folder_name: str, language: str, extension: str):
     """
     Cria a estrutura de pastas e arquivos para um novo desafio
@@ -59,21 +63,34 @@ def create_challenge_structure(folder_name: str, language: str, extension: str):
     Args:
         folder_name: Nome da pasta a ser criada
         language: Linguagem de programação (py ou java)
+        extension: Extensão do arquivo
     """
     # Criar a pasta principal
     os.makedirs(folder_name, exist_ok=True)
     today = datetime.now().strftime("%d-%m-%Y")
     problem_name = folder_name.split("_")[0]
 
+    # Get template contents
+    solution_template = get_template_content(
+        template_type="Solution", language=language, extension=extension
+    )
+    tests_template = get_template_content(
+        template_type="Tests", language=language, extension=extension
+    )
+
+    # Replace placeholders manually instead of using .format()
+    solution_content = solution_template.replace(
+        "{problem_name}", problem_name
+    ).replace("{date}", today)
+    tests_content = tests_template.replace("{problem_name}", problem_name).replace(
+        "{date}", today
+    )
+
     files_to_create = {
         "Anotacoes.txt": "",
         "Rascunhos.excalidraw.md": get_escalidraw_template(),
-        f"Solution.{extension}": get_template_content(
-            template_type="Solution", language=language, extension=extension
-        ).format(problem_name=problem_name, date=today),
-        f"Tests.{extension}": get_template_content(
-            template_type="Tests", language=language, extension=extension
-        ).format(problem_name=problem_name, date=today),
+        f"Solution.{extension}": solution_content,
+        f"Tests.{extension}": tests_content,
     }
 
     for filename, content in files_to_create.items():
