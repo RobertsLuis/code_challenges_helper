@@ -44,7 +44,7 @@ def create_resolution_schema():
     """Cria uma nova estrutura de pastas para um desafio de código."""
     nome_questao = click.prompt("Qual o nome da questão?", type=str)
 
-    valid_languages = {"python": "py", "java": "java"}
+    valid_languages = {"python": "py", "java": "java", "go": "go"}
     language = inquirer.select(
         message="Em qual linguagem deseja realizar?",
         choices=valid_languages.keys(),
