@@ -3,14 +3,17 @@ requires = ["setuptools>=42", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "code_challenge_helper"
-version = "0.1.0"
+name = "code-challenge-helper"
+version = "0.1.1"
 authors = [
     {name = "Roberto Luis de Jesus Santos Junior", email = "contato.robertoluis@gmail.com"},
 ]
 description = "Ferramenta para criar estrutura de pastas para estudos de desafios de código"
 readme = "README.md"
 requires-python = ">=3.7"
+urls = {
+    "GitHub Repository" = "https://github.com/RobertsLuis/code_challenges_helper",
+}
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
@@ -22,8 +25,16 @@ dependencies = [
     "InquirerPy>=0.3.4",
 ]
 
+keywords = [
+    "python",
+    "cli",
+    "challenge",
+    "helper",
+    "code",
+    "challenge-helper",
+]
 [project.scripts]
-challenge-helper = "code_challenge_helper.cli:main"
+code-challenge-helper = "code-challenge-helper.cli:main"
 
 [tool.setuptools]
 include-package-data = true
